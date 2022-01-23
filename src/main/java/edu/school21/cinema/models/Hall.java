@@ -3,6 +3,7 @@ package edu.school21.cinema.models;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "hall")
 public class Hall {
 
     @Id

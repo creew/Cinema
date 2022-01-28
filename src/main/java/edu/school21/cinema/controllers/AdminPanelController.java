@@ -2,39 +2,48 @@ package edu.school21.cinema.controllers;
 
 import edu.school21.cinema.services.FilmService;
 import edu.school21.cinema.services.HallService;
+import edu.school21.cinema.services.SessionService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/admin/panel")
+public class AdminPanelController {
 
     private final HallService hallService;
 
     private final FilmService filmService;
 
-    public AdminController(HallService hallService, FilmService filmService) {
+    private final SessionService sessionService;
+
+    public AdminPanelController(HallService hallService,
+                                FilmService filmService,
+                                SessionService sessionService) {
         this.hallService = hallService;
         this.filmService = filmService;
+        this.sessionService = sessionService;
     }
 
-    @PostMapping("/panel/halls/add")
+    @PostMapping("/halls/add")
     public String addHall(@RequestParam("id") Integer id,
                           @RequestParam("seats") Integer seats) {
         hallService.save(id, seats);
         return "redirect:/admin/panel/halls";
     }
 
-    @GetMapping("/panel/halls")
+    @GetMapping("/halls")
     public String getPanelHalls(Model model) {
         model.addAttribute("halls", hallService.getHalls());
         return "adminHalls";
     }
 
-    @PostMapping(value = "/panel/films/add", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/films/add", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public String addFilm(@RequestParam String title,
                           @RequestParam(name = "year_of_release", required = false) Integer yearOfRelease,
                           @RequestParam String restrictions,
@@ -44,15 +53,27 @@ public class AdminController {
         return "redirect:/admin/panel/films";
     }
 
-    @GetMapping("/panel/films")
+    @GetMapping("/films")
     public String getPanelFilms(Model model) {
         model.addAttribute("films", filmService.getFilms());
         return "adminFilms";
     }
 
-    @GetMapping("/panel/sessions")
-    public void getPanelSessions() {
+    @PostMapping(value = "/sessions/add")
+    public String addSession(@RequestParam(name = "film") Integer filmId,
+                          @RequestParam(name = "hall") Integer hallId,
+                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date date,
+                          @RequestParam Long cost) {
+        sessionService.save(hallId, filmId, cost, date);
+        return "redirect:/admin/panel/sessions";
+    }
 
+    @GetMapping("/sessions")
+    public String getPanelSessions(Model model) {
+        model.addAttribute("films", filmService.getFilms());
+        model.addAttribute("halls", hallService.getHalls());
+        model.addAttribute("sessions", sessionService.getSessions());
+        return "adminSessions";
     }
 
 

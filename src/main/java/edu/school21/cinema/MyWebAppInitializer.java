@@ -40,7 +40,8 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
         dispatcher.setMultipartConfig(multipartConfigElement);
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
-
+        dispatcher.setInitParameter("encoding", "UTF-8");
+        dispatcher.setInitParameter("forceEncoding", "true");
         ServletRegistration.Dynamic h2Console = container.addServlet("h2_console", new WebServlet());
         h2Console.addMapping("/h2/*");
     }

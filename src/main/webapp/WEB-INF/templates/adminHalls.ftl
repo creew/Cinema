@@ -6,10 +6,10 @@
 <body>
 <h3>Halls List</h3>
 <form action="halls/add" method="post">
-    <label for="id"><b>Номер зала</b></label>
-    <input id="id" type="text" name="id">
-    <label for="seats"><b>Количество сидячих мест</b></label>
-    <input id="seats" type="text" name="seats">
+    <p><label for="id"><b>Номер зала</b></label>
+    <input id="id" type="text" name="id"></p>
+    <p><label for="seats"><b>Количество сидячих мест</b></label>
+    <input id="seats" type="text" name="seats"></p>
     <button type="submit">Добавить</button>
 </form>
 <br><br>

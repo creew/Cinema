@@ -24,4 +24,8 @@ public class HallRepository {
     public void save(Hall entity) {
         entityManager.persist(entity );
     }
+
+    public Hall findById(Integer hallId) {
+        return entityManager.find(Hall.class, hallId);
+    }
 }

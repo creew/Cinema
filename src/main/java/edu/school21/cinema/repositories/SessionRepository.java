@@ -1,6 +1,7 @@
 package edu.school21.cinema.repositories;
 
-import edu.school21.cinema.models.Film;
+import edu.school21.cinema.models.Hall;
+import edu.school21.cinema.models.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,23 +10,19 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class FilmRepository {
+public class SessionRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Film> findAll() {
+    public List<Session> findAll() {
         return entityManager
-                .createQuery("select f from Film f", Film.class)
+                .createQuery("select s from Session s", Session.class)
                 .getResultList();
     }
 
     @Transactional
-    public void save(Film entity) {
+    public void save(Session entity) {
         entityManager.persist(entity );
-    }
-
-    public Film findById(Integer filmId) {
-        return entityManager.find(Film.class, filmId);
     }
 }

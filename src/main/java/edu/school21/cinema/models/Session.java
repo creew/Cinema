@@ -1,7 +1,7 @@
 package edu.school21.cinema.models;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 @Table(name = "session")
@@ -11,7 +11,7 @@ public class Session {
     private Integer id;
 
     @Column(name = "date")
-    private Date date;
+    private Instant date;
 
     @ManyToOne
     @JoinColumn(name="hall_id")
@@ -32,11 +32,11 @@ public class Session {
         this.id = id;
     }
 
-    public Date getDate() {
+    public Instant getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Instant date) {
         this.date = date;
     }
 

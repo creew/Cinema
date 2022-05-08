@@ -20,7 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-
 @Configuration
 public class DataSourceConfiguration {
 

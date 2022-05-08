@@ -21,7 +21,7 @@ public class FilmService {
         return filmRepository.findAll();
     }
 
-    public void save(String title, int yearOfRelease, String restrictions,
+    public void save(String title, Integer yearOfRelease, String restrictions,
                      String description, MultipartFile poster) {
         Film film = new Film();
         film.setTitle(title);

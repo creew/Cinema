@@ -3,12 +3,9 @@ package edu.school21.cinema.config;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Version;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
@@ -16,10 +13,6 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 
 @Configuration
-@ComponentScan(basePackages = {"edu.school21.cinema"})
-@EnableWebMvc
-@PropertySource("classpath:/application.properties")
-@EnableTransactionManagement
 public class DispatcherConfig {
 
     @Bean
@@ -46,4 +39,8 @@ public class DispatcherConfig {
         return freeMarkerConfigurer;
     }
 
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
 }

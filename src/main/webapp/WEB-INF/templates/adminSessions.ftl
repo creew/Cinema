@@ -5,7 +5,7 @@
 </head>
 <body>
 <h3>Films List</h3>
-<form id="add_session" action="sessions/add" method="post">
+<form id="add_session" action="sessions" method="post">
     <p><label for="hall"><b>Зал</b></label>
     <select id="hall" name="hall">
         <#list halls as hall>

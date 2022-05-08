@@ -8,7 +8,7 @@ import edu.school21.cinema.repositories.HallRepository;
 import edu.school21.cinema.repositories.SessionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -29,7 +29,7 @@ public class SessionService {
         return sessionRepository.findAll();
     }
 
-    public Session save(Integer hallId, Integer filmId, Long cost, Date date) {
+    public Session save(Integer hallId, Integer filmId, Long cost, Instant date) {
         Hall hall = hallRepository.findById(hallId);
         if (hall == null) {
             return null;

@@ -5,7 +5,7 @@
 </head>
 <body>
 <h3>Films List</h3>
-<form action="films/add" method="post" enctype="multipart/form-data">
+<form action="films" method="post" enctype="multipart/form-data">
     <label for="title"><b>Наименование</b></label>
     <input id="title" type="text" name="title"><br/>
     <label for="year_of_release"><b>Год выпуска</b></label>

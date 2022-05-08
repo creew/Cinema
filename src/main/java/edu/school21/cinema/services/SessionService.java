@@ -47,4 +47,7 @@ public class SessionService {
         return session;
     }
 
+    public List<Session> findByName(String filmName) {
+        return sessionRepository.findByName(filmName);
+    }
 }

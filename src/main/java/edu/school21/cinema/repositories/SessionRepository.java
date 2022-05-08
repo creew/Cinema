@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Locale;
 
 @Repository
 public class SessionRepository {
@@ -18,6 +19,14 @@ public class SessionRepository {
     public List<Session> findAll() {
         return entityManager
                 .createQuery("select s from Session s", Session.class)
+                .getResultList();
+    }
+
+    public List<Session> findByName(String name) {
+        String lowerName = "%" + name.toLowerCase(Locale.getDefault()) + "%";
+        return entityManager
+                .createQuery("select s from Session s join Film f where lower(f.title) like ?1", Session.class)
+                .setParameter(1, lowerName)
                 .getResultList();
     }
 

@@ -8,7 +8,8 @@ import edu.school21.cinema.repositories.HallRepository;
 import edu.school21.cinema.repositories.SessionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class SessionService {
         return sessionRepository.findAll();
     }
 
-    public Session save(Integer hallId, Integer filmId, Long cost, Instant date) {
+    public Session save(Integer hallId, Integer filmId, Long cost, LocalDateTime date) {
         Hall hall = hallRepository.findById(hallId);
         if (hall == null) {
             return null;
@@ -49,5 +50,13 @@ public class SessionService {
 
     public List<Session> findByName(String filmName) {
         return sessionRepository.findByName(filmName);
+    }
+
+    public Session getSession(Integer sessionId) {
+        Session session = sessionRepository.findById(sessionId);
+        if (session == null) {
+            throw new EntityNotFoundException("Session with id: " + sessionId + " not found");
+        }
+        return session;
     }
 }

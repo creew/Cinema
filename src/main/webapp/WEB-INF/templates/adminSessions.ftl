@@ -15,7 +15,7 @@
     <p><label for="film"><b>Фильм</b></label>
     <select id="film" name="film">
         <#list films as film>
-            <option value="${film.id}">${film.title}, ${film.yearOfRelease}</option>
+            <option value="${film.id}">${film.title}, ${film.yearOfRelease!}</option>
         </#list>
     </select></p>
     <label for="date"><b>Дата</b></label>

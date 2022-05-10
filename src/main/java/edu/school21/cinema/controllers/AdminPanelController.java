@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/admin/panel")
@@ -65,7 +65,7 @@ public class AdminPanelController {
     @PostMapping(value = "/sessions")
     public String addSession(@RequestParam(name = "film") Integer filmId,
                           @RequestParam(name = "hall") Integer hallId,
-                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Instant date,
+                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime date,
                           @RequestParam Long cost) {
         sessionService.save(hallId, filmId, cost, date);
         return "redirect:/admin/panel/sessions";

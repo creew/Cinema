@@ -1,6 +1,5 @@
 package edu.school21.cinema.repositories;
 
-import edu.school21.cinema.models.Hall;
 import edu.school21.cinema.models.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,8 @@ public class SessionRepository {
     public List<Session> findByName(String name) {
         String lowerName = "%" + name.toLowerCase(Locale.getDefault()) + "%";
         return entityManager
-                .createQuery("select s from Session s join Film f where lower(f.title) like ?1", Session.class)
+                .createQuery("select s from Session s " +
+                        "where lower(s.film.title) like ?1", Session.class)
                 .setParameter(1, lowerName)
                 .getResultList();
     }
@@ -33,5 +33,9 @@ public class SessionRepository {
     @Transactional
     public void save(Session entity) {
         entityManager.persist(entity );
+    }
+
+    public Session findById(Integer sessionId) {
+        return entityManager.find(Session.class, sessionId);
     }
 }

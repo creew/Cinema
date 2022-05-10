@@ -31,10 +31,14 @@
         <#list films as film>
             <tr>
                 <td>${film.title}</td>
-                <td>${film.yearOfRelease}</td>
-                <td>${film.restrictions}</td>
-                <td>${film.description}</td>
-                <td>${film.poster}</td>
+                <td>${film.yearOfRelease!}</td>
+                <td>${film.restrictions!}</td>
+                <td>${film.description!}</td>
+                <td>
+                    <#if film.poster??>
+                        <a href="/images/${film.poster.id}">${film.poster.filename}</a>
+                    </#if>
+                </td>
             </tr>
         </#list>
     </table>

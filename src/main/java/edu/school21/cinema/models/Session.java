@@ -1,7 +1,9 @@
 package edu.school21.cinema.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "session")
@@ -10,8 +12,9 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     @Column(name = "date")
-    private Instant date;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name="hall_id")
@@ -32,11 +35,11 @@ public class Session {
         this.id = id;
     }
 
-    public Instant getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

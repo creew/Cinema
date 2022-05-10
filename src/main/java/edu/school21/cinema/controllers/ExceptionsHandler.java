@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
@@ -23,5 +24,10 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining(", ")), HttpStatus.BAD_REQUEST);
         return response;
+    }
+
+    @ExceptionHandler({ EntityNotFoundException.class })
+    public ResponseEntity<String> entityNotFoundException(EntityNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

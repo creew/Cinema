@@ -21,8 +21,9 @@ public class Film {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "poster")
-    private String poster;
+    @JoinColumn(name="poster_id")
+    @ManyToOne
+    private FileDescription poster;
 
     public Integer getId() {
         return id;
@@ -64,11 +65,11 @@ public class Film {
         this.description = description;
     }
 
-    public String getPoster() {
+    public FileDescription getPoster() {
         return poster;
     }
 
-    public void setPoster(String poster) {
+    public void setPoster(FileDescription poster) {
         this.poster = poster;
     }
 }

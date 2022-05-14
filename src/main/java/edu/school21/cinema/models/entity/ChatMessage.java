@@ -1,4 +1,4 @@
-package edu.school21.cinema.models;
+package edu.school21.cinema.models.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

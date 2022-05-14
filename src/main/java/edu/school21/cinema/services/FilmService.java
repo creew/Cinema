@@ -1,7 +1,7 @@
 package edu.school21.cinema.services;
 
-import edu.school21.cinema.models.FileDescription;
-import edu.school21.cinema.models.Film;
+import edu.school21.cinema.models.entity.FileDescription;
+import edu.school21.cinema.models.entity.Film;
 import edu.school21.cinema.repositories.FilmRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,11 +14,11 @@ public class FilmService {
 
     private final FilmRepository filmRepository;
 
-    private final FileDescriptionSaver fileDescriptionSaver;
+    private final FileDescriptionService fileDescriptionService;
 
-    public FilmService(FilmRepository filmRepository, FileDescriptionSaver fileDescriptionSaver) {
+    public FilmService(FilmRepository filmRepository, FileDescriptionService fileDescriptionService) {
         this.filmRepository = filmRepository;
-        this.fileDescriptionSaver = fileDescriptionSaver;
+        this.fileDescriptionService = fileDescriptionService;
     }
 
 
@@ -34,7 +34,7 @@ public class FilmService {
         film.setDescription(description);
         film.setRestrictions(restrictions);
         try {
-            FileDescription file = fileDescriptionSaver.saveFile(poster.getOriginalFilename(),
+            FileDescription file = fileDescriptionService.saveFile(poster.getOriginalFilename(),
                     poster.getContentType(), poster.getInputStream());
             film.setPoster(file);
         } catch (IOException e) {

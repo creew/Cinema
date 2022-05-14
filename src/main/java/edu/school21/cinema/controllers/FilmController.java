@@ -1,9 +1,9 @@
 package edu.school21.cinema.controllers;
 
-import edu.school21.cinema.models.ChatMessage;
-import edu.school21.cinema.models.FileDescription;
+import edu.school21.cinema.models.entity.ChatMessage;
+import edu.school21.cinema.models.entity.FileDescription;
 import edu.school21.cinema.services.ChatMessageService;
-import edu.school21.cinema.services.FileDescriptionSaver;
+import edu.school21.cinema.services.FileDescriptionService;
 import edu.school21.cinema.services.UserService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
@@ -24,44 +24,44 @@ import java.util.UUID;
 @Controller
 public class FilmController {
 
-    private final FileDescriptionSaver fileDescriptionSaver;
+    private final FileDescriptionService fileDescriptionService;
 
     private final UserService userService;
 
     private final ChatMessageService chatMessageService;
 
-    public FilmController(FileDescriptionSaver fileDescriptionSaver,
+    public FilmController(FileDescriptionService fileDescriptionService,
                           UserService userService,
                           ChatMessageService chatMessageService) {
-        this.fileDescriptionSaver = fileDescriptionSaver;
+        this.fileDescriptionService = fileDescriptionService;
         this.userService = userService;
         this.chatMessageService = chatMessageService;
     }
 
     @GetMapping("/images/{id}")
     public void getPanelFilms(@PathVariable UUID id, HttpServletResponse response) throws IOException {
-        FileDescription image = fileDescriptionSaver.writeImage(id, response.getOutputStream());
+        FileDescription image = fileDescriptionService.writeImage(id, response.getOutputStream());
         response.setContentType(image.getContentType());
     }
 
     @GetMapping("/films/{id}/chat")
-    public String getChat(@PathVariable Integer id, @CookieValue(name = "user-id", required = false) UUID userId,
+    public String getChat(@PathVariable Integer id, @CookieValue(name = "session-id", required = false) UUID sessionId,
                           HttpServletRequest request, HttpServletResponse response, Model model) {
-        System.out.println("user-id: " + id + ", remoteAddr: " + request.getRemoteAddr());
-        if (userId == null) {
-            userId = UUID.randomUUID();
+        System.out.println("session-id: " + id + ", remoteAddr: " + request.getRemoteAddr());
+        if (sessionId == null) {
+            sessionId = UUID.randomUUID();
         }
-        Cookie cookie = new Cookie("user-id", userId.toString());
+        Cookie cookie = new Cookie("session-id", sessionId.toString());
         cookie.setMaxAge(7 * 24 * 60 * 60);
         response.addCookie(cookie);
-        model.addAttribute("user", userService.findUserById(userId, request.getRemoteAddr()));
+        model.addAttribute("user", userService.findUserBySessionId(sessionId, request.getRemoteAddr()));
         model.addAttribute("messages", chatMessageService.findMessagesByFilmId(id));
         model.addAttribute("filmId", id);
         return "chat";
     }
 
     @MessageMapping("/films/{id}/chat/messages")
-    public ChatMessage f(@DestinationVariable Integer id, @Payload MessageStomp payload, @Header UUID userId) {
-        return chatMessageService.saveMessage(id, payload, userId);
+    public ChatMessage f(@DestinationVariable Integer id, @Payload MessageStomp payload, @Header UUID sessionId) {
+        return chatMessageService.saveMessage(id, payload, sessionId);
     }
 }

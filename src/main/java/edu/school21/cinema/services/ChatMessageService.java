@@ -1,9 +1,9 @@
 package edu.school21.cinema.services;
 
 import edu.school21.cinema.controllers.MessageStomp;
-import edu.school21.cinema.models.ChatMessage;
-import edu.school21.cinema.models.Client;
-import edu.school21.cinema.models.Film;
+import edu.school21.cinema.models.entity.ChatMessage;
+import edu.school21.cinema.models.entity.Client;
+import edu.school21.cinema.models.entity.Film;
 import edu.school21.cinema.repositories.ChatMessageRepository;
 import edu.school21.cinema.repositories.ClientRepository;
 import edu.school21.cinema.repositories.FilmRepository;
@@ -35,14 +35,14 @@ public class ChatMessageService {
         return byFilmId;
     }
 
-    public ChatMessage saveMessage(Integer filmId, MessageStomp payload, UUID userId) {
+    public ChatMessage saveMessage(Integer filmId, MessageStomp payload, UUID sessionId) {
         Film film = filmRepository.findById(filmId);
         if (film == null) {
             throw new IllegalArgumentException("No film with id: " + filmId);
         }
-        Client client = clientRepository.findById(userId);
+        Client client = clientRepository.findBySessionId(sessionId);
         if (client == null) {
-            throw new IllegalArgumentException("No client with id: " + userId);
+            throw new IllegalArgumentException("No client with sessionId: " + sessionId);
         }
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setCreated(LocalDateTime.now());

@@ -14,6 +14,7 @@
             margin-bottom: 12px; /* Add some space below the input */
         }
     </style>
+    <script></script>
 </head>
 <body>
 <input type="text" id="live_search" placeholder="Search for films..">
@@ -26,31 +27,6 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous">
 </script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        update('')
-        $("#live_search").keyup(function (){
-            const input = $(this).val();
-            update(input)
-        })
-    })
-    function update(val) {
-        $.ajax({
-            url:"/sessions/search",
-            method:"GET",
-            data:{ filmName: val},
-            success:function (data) {
-                $("#sessions tr").remove()
-                for (const i in data) {
-                    const row$ = $('<tr/>');
-                    row$.append($('<td/>').html(data[i].film.poster));
-                    row$.append($('<td/>').html(data[i].date));
-                    row$.append($('<td/>').append($('<a>').attr("href", "/sessions/" + data[i].id).html(data[i].film.title)));
-                    $("#sessions").append(row$)
-                }
-            }
-        })
-    }
-</script>
+<script src="/js/livesearch.js"></script>
 </body>
 </html>

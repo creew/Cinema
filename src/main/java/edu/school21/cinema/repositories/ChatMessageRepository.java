@@ -1,7 +1,6 @@
 package edu.school21.cinema.repositories;
 
-import edu.school21.cinema.models.ChatMessage;
-import edu.school21.cinema.models.Film;
+import edu.school21.cinema.models.entity.ChatMessage;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

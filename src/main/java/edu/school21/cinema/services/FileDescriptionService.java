@@ -1,37 +1,36 @@
 package edu.school21.cinema.services;
 
-import edu.school21.cinema.models.FileDescription;
+import edu.school21.cinema.models.entity.FileDescription;
 import edu.school21.cinema.repositories.FileDescriptionRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-@Component
-public class FileDescriptionSaver {
+@Service
+public class FileDescriptionService {
 
     private final FileDescriptionRepository fileDescriptionRepository;
 
-    private final String storagePath;
+    private final PathConstructorService pathConstructorService;
 
-    public FileDescriptionSaver(FileDescriptionRepository fileDescriptionRepository,
-                                @Value("${storage.path}") String storagePath) {
+    public FileDescriptionService(FileDescriptionRepository fileDescriptionRepository,
+                                  PathConstructorService pathConstructorService) {
         this.fileDescriptionRepository = fileDescriptionRepository;
-        this.storagePath = storagePath;
+        this.pathConstructorService = pathConstructorService;
     }
 
     public Path getFilePath(UUID uuid) {
-        return Paths.get(storagePath + File.separator + uuid);
+        return Paths.get(pathConstructorService.constructPathString(uuid));
     }
 
     public FileDescription writeImage(UUID image, OutputStream outputStream) throws IOException {
@@ -40,6 +39,11 @@ public class FileDescriptionSaver {
             Path path = getFilePath(image);
             Files.copy(path, outputStream);
             return fileDescription;
+        } else {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(image.toString())) {
+                String mimeType= URLConnection.guessContentTypeFromStream(is);
+
+            }
         }
         throw new EntityNotFoundException("Image with id: " + image + " not found");
     }
@@ -57,7 +61,7 @@ public class FileDescriptionSaver {
     }
 
     private long saveFile(InputStream is, UUID name) {
-        File file = new File(storagePath);
+        File file = new File(pathConstructorService.getStoragePath());
         if (!file.exists()) {
             file.mkdirs();
         }

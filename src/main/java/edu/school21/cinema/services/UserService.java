@@ -1,7 +1,7 @@
 package edu.school21.cinema.services;
 
-import edu.school21.cinema.models.Client;
-import edu.school21.cinema.models.LoginInfo;
+import edu.school21.cinema.models.entity.Client;
+import edu.school21.cinema.models.entity.LoginInfo;
 import edu.school21.cinema.repositories.LoginInfoRepository;
 import edu.school21.cinema.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,11 @@ public class UserService {
     }
 
     @Transactional
-    public Client findUserById(UUID userId, String ip) {
-        Client client = clientRepository.findById(userId);
+    public Client findUserBySessionId(UUID sessionId, String ip) {
+        Client client = clientRepository.findBySessionId(sessionId);
         if (client == null) {
             client = new Client();
-            client.setId(userId);
+            client.setSessionId(sessionId);
             client.setAvatar(null);
             clientRepository.save(client);
         }

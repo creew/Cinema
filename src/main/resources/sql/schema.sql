@@ -33,8 +33,9 @@ create table if not exists file_description
 
 create table if not exists client
 (
-    id        uuid primary key,
-    avatar_id uuid
+    id         serial primary key,
+    session_id uuid,
+    avatar_id  uuid
 );
 
 create table if not exists chat_message
@@ -42,7 +43,7 @@ create table if not exists chat_message
     id        bigserial primary key,
     film_id   int,
     created   timestamp,
-    author_id uuid,
+    author_id int,
     message   varchar(1000)
 );
 
@@ -51,7 +52,7 @@ create table if not exists login_info
     id         bigserial primary key,
     login_time timestamp,
     ip         varchar(255),
-    user_id    uuid
+    user_id    int
 );
 
 alter table session

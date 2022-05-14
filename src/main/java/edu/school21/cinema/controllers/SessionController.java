@@ -1,6 +1,6 @@
 package edu.school21.cinema.controllers;
 
-import edu.school21.cinema.models.Session;
+import edu.school21.cinema.models.entity.Session;
 import edu.school21.cinema.services.SessionService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

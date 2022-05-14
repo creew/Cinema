@@ -1,8 +1,8 @@
 package edu.school21.cinema.services;
 
-import edu.school21.cinema.models.Film;
-import edu.school21.cinema.models.Hall;
-import edu.school21.cinema.models.Session;
+import edu.school21.cinema.models.entity.Film;
+import edu.school21.cinema.models.entity.Hall;
+import edu.school21.cinema.models.entity.Session;
 import edu.school21.cinema.repositories.FilmRepository;
 import edu.school21.cinema.repositories.HallRepository;
 import edu.school21.cinema.repositories.SessionRepository;

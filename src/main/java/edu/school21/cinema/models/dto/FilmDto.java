@@ -1,29 +1,21 @@
-package edu.school21.cinema.models;
+package edu.school21.cinema.models.dto;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "film")
-public class Film {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FilmDto {
     private Integer id;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "year_of_release")
     private Integer yearOfRelease;
 
-    @Column(name = "restrictions")
     private String restrictions;
 
-    @Column(name = "description")
     private String description;
 
-    @JoinColumn(name="poster_id")
-    @ManyToOne
-    private FileDescription poster;
+    private String posterPath;
+
+    private String posterFilename;
+
+    private String posterContentType;
 
     public Integer getId() {
         return id;
@@ -65,11 +57,27 @@ public class Film {
         this.description = description;
     }
 
-    public FileDescription getPoster() {
-        return poster;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPoster(FileDescription poster) {
-        this.poster = poster;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getPosterFilename() {
+        return posterFilename;
+    }
+
+    public void setPosterFilename(String posterFilename) {
+        this.posterFilename = posterFilename;
+    }
+
+    public String getPosterContentType() {
+        return posterContentType;
+    }
+
+    public void setPosterContentType(String posterContentType) {
+        this.posterContentType = posterContentType;
     }
 }

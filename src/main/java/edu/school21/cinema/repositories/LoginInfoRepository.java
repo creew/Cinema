@@ -1,6 +1,6 @@
 package edu.school21.cinema.repositories;
 
-import edu.school21.cinema.models.LoginInfo;
+import edu.school21.cinema.models.entity.LoginInfo;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

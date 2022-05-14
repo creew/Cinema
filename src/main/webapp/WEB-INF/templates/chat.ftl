@@ -78,14 +78,20 @@
         <div ${(message.author.id == user.id) ? then('class="container darker"', 'class="container"')}>
             <img src="https://www.w3schools.com/w3images/bandmember.jpg"
                  alt="Avatar" ${(message.author.id == user.id) ? then('class="right"', '')}>
-            <p>${message.message}</p>
+            <h2>user-${message.author.id}:</h2><p>${message.message}</p>
             <span class="time-right">${message.created}</span>
         </div>
     </#list>
 </div>
 <div class="chat">
-    <input type="text" id="message" placeholder="Search for films..">
+    <input type="text" id="message" placeholder="Message...">
+
+    <form id="addAvatar" action="avatar" method="post" enctype="multipart/form-data">
+        <input id="avatar" type="file" name="avatar"><br/>
+        <button  type="submit">Добавить</button>
+    </form>
 </div>
+
 
 <script>
     const url = "ws://localhost:8080/chat";
@@ -93,9 +99,10 @@
     client.connect({}, (value) => {
         client.subscribe(`/topic/films/${filmId}/chat/messages`, (v) => {
             const message = JSON.parse(v.body)
-            const row$ = $('<div/>').attr("class", message.author.id==='${user.id}'?'container darker':'container')
+            const row$ = $('<div/>').attr("class", message.author.id===${user.id}?'container darker':'container')
             row$.append($('<img/>').attr('src', 'https://www.w3schools.com/w3images/bandmember.jpg')
-                .attr('alt', 'Avatar').attr('class', message.author.id==='${user.id}'?'right':''))
+                .attr('alt', 'Avatar').attr('class', message.author.id===${user.id}?'right':''))
+            row$.append($('<h2/>').html("user-" + message.author.id + ":"))
             row$.append($('<p/>').html(message.message))
             row$.append($('<span/>').attr('class', 'time-right').html(message.created))
             $("#chat_window").append(row$)
@@ -105,10 +112,17 @@
     input.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            client.send('/app/films/${filmId}/chat/messages', {"userId": "${user.id}"}, JSON.stringify({"message": input.value}))
+            client.send('/app/films/${filmId}/chat/messages', {"sessionId": "${user.sessionId}"}, JSON.stringify({"message": input.value}))
             input.value = ''
         }
     });
+
+    const addAvatar = document.getElementById('addAvatar');
+    if (form.attachEvent) {
+        form.attachEvent("submit", processForm);
+    } else {
+        form.addEventListener("submit", processForm);
+    }
 </script>
 </body>
 </html>

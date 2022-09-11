@@ -13,7 +13,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring.version>5.3.15</spring.version>
+        <spring.version>5.3.21</spring.version>
         <hibernate.version>5.6.4.Final</hibernate.version>
     </properties>
 

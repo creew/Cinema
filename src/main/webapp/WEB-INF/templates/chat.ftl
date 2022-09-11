@@ -62,13 +62,18 @@
         }
 
         .chat {
-            margin-left: 20%;
-            margin-right: 20%;
+            float: left;
         }
 
         .chat_history {
-            height: 85%;
+            width:70%;
+            height: 95%;
             overflow-y: auto;
+        }
+
+        .logins {
+            width:15%;
+            height: 95%;
         }
 
         #message {
@@ -96,15 +101,31 @@
         </div>
     </#list>
 </div>
-<div class="chat message">
-    <input type="text" id="message" placeholder="Message...">
+<div class="chat logins">
+    <div class="message">
+        <input type="text" id="message" placeholder="Message...">
+    </div>
+    <h2>История логинов:</h2>
+    <table border="1">
+        <tr>
+            <th>Время логина</th>
+            <th>Ip</th>
+        </tr>
+        <#list logins as login>
+            <tr>
+                <td>${login.loginTime}</td>
+                <td>${login.ip}</td>
+            </tr>
+        </#list>
+    </table>
 </div>
 
 <script>
     $( document ).ready(function() {
-        const url = "ws://localhost:8080/chat";
+        const url = "ws://" + location.hostname + ":8080/chat";
         const client = Stomp.client(url);
         client.connect({}, (value) => {
+
             client.subscribe(`/topic/films/${filmId}/chat/messages`, (v) => {
                 const message = JSON.parse(v.body)
                 const row$ = $('<div/>').attr("class", message.author.id===${user.id}?'container darker':'container')

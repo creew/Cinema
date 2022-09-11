@@ -12,6 +12,7 @@
 
     <h2>Количество мест: ${session.hall.numberOfSeats}</h2>
     <h2>Стоимость билета: ${session.ticketCost}</h2>
+    <h2><a href="/films/${session.film.id}/chat">Чат</a></h2>
 </div>
 <br><br>
 </body>

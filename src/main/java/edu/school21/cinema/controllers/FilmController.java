@@ -1,11 +1,11 @@
 package edu.school21.cinema.controllers;
 
 import edu.school21.cinema.models.entity.ChatMessage;
-import edu.school21.cinema.models.entity.FileDescription;
+import edu.school21.cinema.models.entity.Client;
 import edu.school21.cinema.services.ChatMessageService;
 import edu.school21.cinema.services.FileDescriptionService;
+import edu.school21.cinema.services.LoginInfoService;
 import edu.school21.cinema.services.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,9 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,12 +31,15 @@ public class FilmController {
 
     private final ChatMessageService chatMessageService;
 
+    private final LoginInfoService loginInfoService;
+
     public FilmController(FileDescriptionService fileDescriptionService,
                           UserService userService,
-                          ChatMessageService chatMessageService) {
+                          ChatMessageService chatMessageService, LoginInfoService loginInfoService) {
         this.fileDescriptionService = fileDescriptionService;
         this.userService = userService;
         this.chatMessageService = chatMessageService;
+        this.loginInfoService = loginInfoService;
     }
 
     @GetMapping("/images/{id}")
@@ -59,8 +59,10 @@ public class FilmController {
         cookie.setMaxAge(7 * 24 * 60 * 60);
         cookie.setPath("/");
         response.addCookie(cookie);
-        model.addAttribute("user", userService.findUserBySessionId(sessionId, request.getRemoteAddr()));
+        Client user = userService.findUserBySessionId(sessionId, request.getRemoteAddr());
+        model.addAttribute("user", user);
         model.addAttribute("messages", chatMessageService.findMessagesByFilmId(id));
+        model.addAttribute("logins", loginInfoService.findLoginInfoByUserId(user.getId()));
         model.addAttribute("filmId", id);
         return "chat";
     }

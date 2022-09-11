@@ -5,6 +5,7 @@ import edu.school21.cinema.models.entity.FileDescription;
 import edu.school21.cinema.services.ChatMessageService;
 import edu.school21.cinema.services.FileDescriptionService;
 import edu.school21.cinema.services.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,6 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +44,8 @@ public class FilmController {
 
     @GetMapping("/images/{id}")
     public void getPanelFilms(@PathVariable UUID id, HttpServletResponse response) throws IOException {
-        FileDescription image = fileDescriptionService.writeImage(id, response.getOutputStream());
-        response.setContentType(image.getContentType());
+        String contentType = fileDescriptionService.writeImage(id, response.getOutputStream());
+        response.setContentType(contentType);
     }
 
     @GetMapping("/films/{id}/chat")
@@ -53,6 +57,7 @@ public class FilmController {
         }
         Cookie cookie = new Cookie("session-id", sessionId.toString());
         cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setPath("/");
         response.addCookie(cookie);
         model.addAttribute("user", userService.findUserBySessionId(sessionId, request.getRemoteAddr()));
         model.addAttribute("messages", chatMessageService.findMessagesByFilmId(id));

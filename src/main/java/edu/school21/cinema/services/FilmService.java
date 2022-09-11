@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FilmService {
@@ -33,12 +34,16 @@ public class FilmService {
         film.setYearOfRelease(yearOfRelease);
         film.setDescription(description);
         film.setRestrictions(restrictions);
-        try {
-            FileDescription file = fileDescriptionService.saveFile(poster.getOriginalFilename(),
-                    poster.getContentType(), poster.getInputStream());
-            film.setPoster(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (poster != null) {
+            try {
+                FileDescription file = fileDescriptionService.saveFile(poster.getOriginalFilename(),
+                        poster.getContentType(), poster.getInputStream());
+                film.setPoster(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            film.setPoster(fileDescriptionService.findById(UUID.fromString("11111111-1111-1111-1111-111111111111")));
         }
         filmRepository.save(film);
     }

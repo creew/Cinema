@@ -6,7 +6,7 @@
 <body>
 <h2>${session.film.title}</h2>
 <div>
-    <img src="/images/<#if session.film.poster??>${session.film.poster.id}<#else>11111111-1111-1111-1111-111111111111</#if>" width="400" height="400">
+    <img src="/images/${session.film.poster.id}" width="400" height="400">
     <h2>Сеанс в ${session.date}</h2>
     <h2>Зал №${session.hall.id}</h2>
 

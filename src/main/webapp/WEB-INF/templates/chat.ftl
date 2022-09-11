@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title>Chat </title>
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+        }
         /* Chat containers */
         .container {
             border: 2px solid #dedede;
@@ -59,12 +66,17 @@
             margin-right: 20%;
         }
 
+        .chat_history {
+            height: 85%;
+            overflow-y: auto;
+        }
+
         #message {
             width: 100%; /* Full-width */
             font-size: 16px; /* Increase font-size */
             padding: 12px 12px 12px 12px; /* Add some padding */
             border: 1px solid #ddd; /* Add a grey border */
-            margin-bottom: 12px; /* Add some space below the input */
+            margin-bottom: 5px; /* Add some space below the input */
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
@@ -73,56 +85,72 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="chat" id="chat_window">
+<div class="chat chat_history" id="chat_window">
+    <input type="file" id="imgupload" accept="image/*" style="display:none"/>
     <#list messages as message>
         <div ${(message.author.id == user.id) ? then('class="container darker"', 'class="container"')}>
-            <img src="https://www.w3schools.com/w3images/bandmember.jpg"
-                 alt="Avatar" ${(message.author.id == user.id) ? then('class="right"', '')}>
+            <img src="/images/${message.author.avatar.id}"
+                 alt="Avatar" ${(message.author.id == user.id) ? then('class="right uploadAvatar"', '')}>
             <h2>user-${message.author.id}:</h2><p>${message.message}</p>
             <span class="time-right">${message.created}</span>
         </div>
     </#list>
 </div>
-<div class="chat">
+<div class="chat message">
     <input type="text" id="message" placeholder="Message...">
-
-    <form id="addAvatar" action="avatar" method="post" enctype="multipart/form-data">
-        <input id="avatar" type="file" name="avatar"><br/>
-        <button  type="submit">Добавить</button>
-    </form>
 </div>
 
-
 <script>
-    const url = "ws://localhost:8080/chat";
-    const client = Stomp.client(url);
-    client.connect({}, (value) => {
-        client.subscribe(`/topic/films/${filmId}/chat/messages`, (v) => {
-            const message = JSON.parse(v.body)
-            const row$ = $('<div/>').attr("class", message.author.id===${user.id}?'container darker':'container')
-            row$.append($('<img/>').attr('src', 'https://www.w3schools.com/w3images/bandmember.jpg')
-                .attr('alt', 'Avatar').attr('class', message.author.id===${user.id}?'right':''))
-            row$.append($('<h2/>').html("user-" + message.author.id + ":"))
-            row$.append($('<p/>').html(message.message))
-            row$.append($('<span/>').attr('class', 'time-right').html(message.created))
-            $("#chat_window").append(row$)
+    $( document ).ready(function() {
+        const url = "ws://localhost:8080/chat";
+        const client = Stomp.client(url);
+        client.connect({}, (value) => {
+            client.subscribe(`/topic/films/${filmId}/chat/messages`, (v) => {
+                const message = JSON.parse(v.body)
+                const row$ = $('<div/>').attr("class", message.author.id===${user.id}?'container darker':'container')
+                row$.append($('<img/>').attr('src', '/images/' + message.author.avatar.id)
+                    .attr('alt', 'Avatar').attr('class', message.author.id===${user.id}?'right uploadAvatar':''))
+                row$.append($('<h2/>').html("user-" + message.author.id + ":"))
+                row$.append($('<p/>').html(message.message))
+                row$.append($('<span/>').attr('class', 'time-right').html(message.created))
+                $("#chat_window").append(row$)
+                scrollDown()
+            })
         })
-    })
-    const input = document.getElementById("message");
-    input.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            client.send('/app/films/${filmId}/chat/messages', {"sessionId": "${user.sessionId}"}, JSON.stringify({"message": input.value}))
-            input.value = ''
+        const input = document.getElementById("message");
+        input.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                client.send('/app/films/${filmId}/chat/messages', {"sessionId": "${user.sessionId}"}, JSON.stringify({"message": input.value}))
+                input.value = ''
+            }
+        });
+        $(document).on('click', '.uploadAvatar', function(){
+            $('#imgupload').click()
+        });
+        $('#imgupload').change(function () {
+            const files = $('#imgupload').prop('files')
+            if (files.length === 1) {
+                const formData = new FormData();
+                formData.append('file', files[0]);
+                $.ajax({
+                    url : `/avatar/${user.id}`,
+                    type : 'POST',
+                    data : formData,
+                    contentType: false,
+                    processData: false,
+                });
+            }
+        })
+        $(document).ajaxStop(function(){
+            window.location.reload();
+        });
+        function scrollDown() {
+            const selector = $('.chat_history')
+            selector.scrollTop(selector.height()*selector.height());
         }
+        scrollDown()
     });
-
-    const addAvatar = document.getElementById('addAvatar');
-    if (form.attachEvent) {
-        form.attachEvent("submit", processForm);
-    } else {
-        form.addEventListener("submit", processForm);
-    }
 </script>
 </body>
 </html>

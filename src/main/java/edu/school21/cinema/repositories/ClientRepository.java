@@ -30,4 +30,13 @@ public class ClientRepository {
             return null;
         }
     }
+
+    public Client findById(Integer id) {
+        return entityManager.find(Client.class, id);
+    }
+
+    @Transactional
+    public void update(Client client) {
+        entityManager.merge(client);
+    }
 }
